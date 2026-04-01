@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Resume Analyzer</title>
+  <title>AI Resume Analyzer</title>
 </head>
 <body>
 
 <h2>AI Resume Analyzer</h2>
 
+<label>Student Name:</label><br>
+<input type="text" id="name" placeholder="Enter your name"><br><br>
+
+<label>Email:</label><br>
+<input type="text" id="email" placeholder="Enter your email"><br><br>
+
+<label>Education:</label><br>
+<input type="text" id="education" placeholder="e.g., B.E CSE"><br><br>
+
+<label>Resume:</label><br>
 <textarea id="resume" rows="10" cols="50" placeholder="Paste your resume here..."></textarea><br><br>
 
 <button onclick="analyze()">Analyze</button>
@@ -15,20 +25,32 @@
 
 <script>
 async function analyze() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const education = document.getElementById("education").value;
   const text = document.getElementById("resume").value;
+
+  if (!name || !email || !education || !text) {
+    alert("Please fill all fields");
+    return;
+  }
 
   const res = await fetch("/api/predict", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ text })
+    body: JSON.stringify({ name, email, education, text })
   });
 
   const data = await res.json();
 
-  document.getElementById("result").innerText =
-    "Prediction: " + data.prediction;
+  if (data.error) {
+    document.getElementById("result").innerText = "Error: " + data.error;
+  } else {
+    document.getElementById("result").innerText =
+      "Prediction: " + data.prediction;
+  }
 }
 </script>
 

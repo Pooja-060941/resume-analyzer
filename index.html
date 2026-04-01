@@ -84,28 +84,36 @@
 
 <script>
 async function analyze() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const education = document.getElementById("education").value;
-  const text = document.getElementById("resume").value;
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const education = document.getElementById("education").value.trim();
+  const text = document.getElementById("resume").value.trim();
+
+  console.log("Sending:", { name, email, education, text }); // 🔥 DEBUG
 
   if (!name || !email || !education || !text) {
     alert("Please fill all fields");
     return;
   }
 
-  const res = await fetch("/api/predict", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ name, email, education, text })
-  });
+  try {
+    const res = await fetch("/api/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, education, text })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  document.getElementById("result").innerText =
-    "🎯 Prediction: " + data.prediction;
+    document.getElementById("result").innerText =
+      "🎯 Prediction: " + data.prediction;
+
+  } catch (error) {
+    document.getElementById("result").innerText =
+      "❌ Error connecting to server";
+  }
 }
 </script>
 

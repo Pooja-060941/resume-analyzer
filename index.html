@@ -2,26 +2,85 @@
 <html>
 <head>
   <title>AI Resume Analyzer</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 400px;
+      margin: 60px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>AI Resume Analyzer</h2>
+<div class="container">
 
-<label>Student Name:</label><br>
-<input type="text" id="name" placeholder="Enter your name"><br><br>
+  <h2>✨ AI Resume Analyzer</h2>
 
-<label>Email:</label><br>
-<input type="text" id="email" placeholder="Enter your email"><br><br>
+  <input type="text" id="name" placeholder="👤 Student Name">
 
-<label>Education:</label><br>
-<input type="text" id="education" placeholder="e.g., B.E CSE"><br><br>
+  <input type="text" id="email" placeholder="📧 Email">
 
-<label>Resume:</label><br>
-<textarea id="resume" rows="10" cols="50" placeholder="Paste your resume here..."></textarea><br><br>
+  <input type="text" id="education" placeholder="🎓 Education (B.E, BCA...)">
 
-<button onclick="analyze()">Analyze</button>
+  <textarea id="resume" rows="6" placeholder="📄 Paste your resume here..."></textarea>
 
-<h3 id="result"></h3>
+  <button onclick="analyze()">Analyze</button>
+
+  <div id="result"></div>
+
+</div>
 
 <script>
 async function analyze() {
@@ -45,12 +104,8 @@ async function analyze() {
 
   const data = await res.json();
 
-  if (data.error) {
-    document.getElementById("result").innerText = "Error: " + data.error;
-  } else {
-    document.getElementById("result").innerText =
-      "Prediction: " + data.prediction;
-  }
+  document.getElementById("result").innerText =
+    "🎯 Prediction: " + data.prediction;
 }
 </script>
 

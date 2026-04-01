@@ -1,50 +1,50 @@
 import { createClient } from "@supabase/supabase-js";
 
-// connect to Supabase
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY
 );
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
-  }
-
   try {
-    const { text } = req.body;
+    const { name, email, education, text } = req.body;
+
+    console.log("BODY:", req.body); // 🔥 must show in logs
 
     let prediction = "Unknown";
     const t = text.toLowerCase();
 
-    // 🔥 smarter logic (based on your dataset)
-    if (t.includes("python") || t.includes("machine learning") || t.includes("data")) {
+    if (t.includes("python") || t.includes("machine learning")) {
       prediction = "Data Science";
     } 
-    else if (t.includes("java") || t.includes("spring") || t.includes("backend")) {
+    else if (t.includes("java") || t.includes("backend")) {
       prediction = "Software Developer";
     } 
-    else if (t.includes("sql") || t.includes("database") || t.includes("mysql")) {
+    else if (t.includes("sql")) {
       prediction = "Database";
     } 
-    else if (t.includes("html") || t.includes("css") || t.includes("frontend")) {
+    else if (t.includes("html") || t.includes("css") || t.includes("react")) {
       prediction = "Web Developer";
-    } 
-    else if (t.includes("marketing") || t.includes("sales")) {
-      prediction = "Marketing";
     }
 
-    // 💾 store in Supabase
-    await supabase.from("resumes").insert([
+    const { error } = await supabase.from("resumes").insert([
       {
+        name: name,
+        email: email,
+        education: education,
         resume_text: text,
         prediction: prediction,
       },
     ]);
 
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+
     return res.status(200).json({ prediction });
 
   } catch (err) {
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: err.message });
   }
 }
